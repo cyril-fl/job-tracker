@@ -1,4 +1,4 @@
-import type { Schema } from 'shared';
+import type { Schema } from '@Shared';
 import type { ZodObject } from 'zod';
 import type z from 'zod';
 
@@ -14,11 +14,6 @@ export class SchemaService {
 
     if (!result.success) {
       throw new Error(result.error.message);
-
-      // i18n.__('error.parse_error', {
-      // 	input: 'ParseService',
-      // 	error: result.error.message,
-      // })
     }
 
     return result.data;

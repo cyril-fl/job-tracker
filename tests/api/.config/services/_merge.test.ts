@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Merge } from '../../../../api/src/.config/services/_merge';
+import { Merge } from '../../../../app/api/.config/services/_merge';
 
 describe('Merge', () => {
   describe('objects', () => {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { App } from '../../api/src/app';
+import { App } from '../../app/api/src/app';
 
 describe('App', () => {
   let app: App;

@@ -1,4 +1,4 @@
-import type { Schema } from 'shared';
+import type { Schema } from '@Shared';
 import { z } from 'zod';
 
 class ConfigSchema implements Schema {

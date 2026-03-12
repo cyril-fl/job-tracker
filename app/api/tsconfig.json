@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@config": ["./.config/index.ts"],
+      "@config/*": ["./.config/*"],
+      "@Shared": ["../shared/src/index.ts"],
+      "@db": ["./src/db/index.ts"],
+      "@db/*": ["./src/db/*"]
+    }
+  },
+  "include": ["src", ".config"]
+}

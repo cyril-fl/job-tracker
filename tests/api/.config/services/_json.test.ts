@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { JSONService } from '../../../../api/src/.config/services/_json';
+import { JSONService } from '../../../../app/api/.config/services/_json';
 
 describe('JSONService', () => {
   describe('unflatten', () => {

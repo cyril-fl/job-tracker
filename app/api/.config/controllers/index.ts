@@ -5,7 +5,6 @@ import ConfigState from '../models';
 import { ConfigSchema as schema } from '../schema/';
 import { JSONService, SchemaService } from '../services';
 
-/* Controller */
 export default class Config {
   private readonly config: ConfigState;
 

@@ -1,7 +1,7 @@
 packages:
-  - client
-  - api
-  - shared
+  - app/client
+  - app/api
+  - app/shared
 
 catalog:
   defu: ^6.1.4

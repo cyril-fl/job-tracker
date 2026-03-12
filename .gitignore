@@ -29,5 +29,8 @@ pnpm-debug.log*
 # TypeScript build info
 *.tsbuildinfo
 
+# Database
+*.db
+
 # Test coverage
 coverage/

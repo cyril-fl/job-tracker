@@ -1,7 +1,7 @@
-import type { Schema } from 'shared';
+import type { Schema } from '@Shared';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { SchemaService } from '../../../../api/src/.config/services/_schema';
+import { SchemaService } from '../../../../app/api/.config/services/_schema';
 
 const testSchema: Schema = {
   name: 'TestSchema',

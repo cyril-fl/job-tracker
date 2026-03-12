@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import Config from '../../../../api/src/.config/controllers/index';
+import Config from '../../../../app/api/.config/controllers/index';
 
 describe('Config controller', () => {
   it('should use defaults when no raw config is provided', () => {
