@@ -2,3 +2,7 @@ packages:
   - client
   - api
   - shared
+
+catalog:
+  defu: ^6.1.4
+  zod: ^4.3.6
