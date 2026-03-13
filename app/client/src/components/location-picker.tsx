@@ -8,9 +8,16 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Check, MapPin, Plus, X } from 'lucide-react';
+import { Check, MapPin, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 type Step = 'country' | 'region' | 'city';
@@ -31,6 +38,8 @@ interface LocationPickerProps {
   countries: string[];
   regions: string[];
   cities: string[];
+  onRenameItem?: (step: Step, oldValue: string, newValue: string) => Promise<void>;
+  onDeleteItem?: (step: Step, value: string) => Promise<void>;
 }
 
 export function LocationPicker({
@@ -43,10 +52,14 @@ export function LocationPicker({
   countries,
   regions,
   cities,
+  onRenameItem,
+  onDeleteItem,
 }: LocationPickerProps) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>('country');
   const [search, setSearch] = useState('');
+  const [editingValue, setEditingValue] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
 
   const hasAny = !!(country || region || city);
 
@@ -219,15 +232,115 @@ export function LocationPicker({
               <CommandEmpty>Aucun résultat.</CommandEmpty>
               <CommandGroup>
                 {filtered.map((item) => (
-                  <CommandItem key={item} onSelect={() => handleSelect(item)}>
-                    <Check
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        currentValue === item ? 'opacity-100' : 'opacity-0',
-                      )}
-                    />
-                    {item}
-                  </CommandItem>
+                  <ContextMenu key={item}>
+                    <ContextMenuTrigger>
+                      <CommandItem
+                        onSelect={() => {
+                          if (editingValue === item) return;
+                          handleSelect(item);
+                        }}
+                      >
+                        {editingValue === item ? (
+                          <form
+                            className="flex items-center gap-1 flex-1"
+                            onSubmit={async (e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (editName.trim() && onRenameItem) {
+                                await onRenameItem(step, item, editName.trim());
+                                if (currentValue === item) {
+                                  const setter =
+                                    step === 'country'
+                                      ? onCountryChange
+                                      : step === 'region'
+                                        ? onRegionChange
+                                        : onCityChange;
+                                  setter(editName.trim());
+                                }
+                                setEditingValue(null);
+                              }
+                            }}
+                          >
+                            <Input
+                              value={editName}
+                              onChange={(e) => setEditName(e.target.value)}
+                              className="h-6 text-sm"
+                              autoFocus
+                              onClick={(e) => e.stopPropagation()}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Escape') {
+                                  e.stopPropagation();
+                                  setEditingValue(null);
+                                }
+                              }}
+                            />
+                            <Button
+                              type="submit"
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 shrink-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Check className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 shrink-0"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingValue(null);
+                              }}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </form>
+                        ) : (
+                          <>
+                            <Check
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                currentValue === item ? 'opacity-100' : 'opacity-0',
+                              )}
+                            />
+                            {item}
+                          </>
+                        )}
+                      </CommandItem>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                      <ContextMenuItem
+                        onClick={() => {
+                          setEditingValue(item);
+                          setEditName(item);
+                        }}
+                      >
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Renommer
+                      </ContextMenuItem>
+                      <ContextMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={async () => {
+                          if (onDeleteItem) {
+                            await onDeleteItem(step, item);
+                            if (currentValue === item) {
+                              const setter =
+                                step === 'country'
+                                  ? onCountryChange
+                                  : step === 'region'
+                                    ? onRegionChange
+                                    : onCityChange;
+                              setter('');
+                            }
+                          }
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Supprimer
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 ))}
                 {search.trim() && !exactMatch && (
                   <CommandItem onSelect={() => handleSelect(search.trim())}>

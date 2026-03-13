@@ -65,6 +65,7 @@ export const api = {
     request<Company>('/companies', { method: 'POST', body: JSON.stringify(data) }),
   updateCompany: (id: number, data: { name?: string; website?: string }) =>
     request<Company>(`/companies/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteCompany: (id: number) => request<void>(`/companies/${id}`, { method: 'DELETE' }),
 
   // Locations
   getCountries: () => request<string[]>('/locations/countries'),
@@ -74,6 +75,33 @@ export const api = {
     let url = `/locations/cities?country=${encodeURIComponent(country)}`;
     if (region) url += `&region=${encodeURIComponent(region)}`;
     return request<string[]>(url);
+  },
+  renameCountry: (oldValue: string, newValue: string) =>
+    request<void>('/locations/countries', {
+      method: 'PUT',
+      body: JSON.stringify({ oldValue, newValue }),
+    }),
+  deleteCountry: (value: string) =>
+    request<void>(`/locations/countries?value=${encodeURIComponent(value)}`, { method: 'DELETE' }),
+  renameRegion: (country: string, oldValue: string, newValue: string) =>
+    request<void>('/locations/regions', {
+      method: 'PUT',
+      body: JSON.stringify({ country, oldValue, newValue }),
+    }),
+  deleteRegion: (country: string, value: string) =>
+    request<void>(
+      `/locations/regions?country=${encodeURIComponent(country)}&value=${encodeURIComponent(value)}`,
+      { method: 'DELETE' },
+    ),
+  renameCity: (country: string, oldValue: string, newValue: string, region?: string) =>
+    request<void>('/locations/cities', {
+      method: 'PUT',
+      body: JSON.stringify({ country, region, oldValue, newValue }),
+    }),
+  deleteCity: (country: string, value: string, region?: string) => {
+    let url = `/locations/cities?country=${encodeURIComponent(country)}&value=${encodeURIComponent(value)}`;
+    if (region) url += `&region=${encodeURIComponent(region)}`;
+    return request<void>(url, { method: 'DELETE' });
   },
 
   // Recruiters

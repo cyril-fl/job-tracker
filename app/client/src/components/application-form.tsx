@@ -65,6 +65,7 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       queryClient.invalidateQueries({ queryKey: ['companies'] });
       queryClient.invalidateQueries({ queryKey: ['locations'] });
+      form.reset();
       onDone();
     },
   });
@@ -75,6 +76,7 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       queryClient.invalidateQueries({ queryKey: ['locations'] });
+      form.reset();
       onDone();
     },
   });
@@ -83,6 +85,21 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
     mutationFn: api.createCompany,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['companies'] });
+    },
+  });
+
+  const updateCompanyMutation = useMutation({
+    mutationFn: ({ id, name }: { id: number; name: string }) => api.updateCompany(id, { name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+    },
+  });
+
+  const deleteCompanyMutation = useMutation({
+    mutationFn: api.deleteCompany,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
     },
   });
 
@@ -226,10 +243,15 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
                     value={field.state.value}
                     onChange={(id) => {
                       field.handleChange(id);
-                      // Pre-fill website from company
-                      const company = companies.find((c) => c.id === id);
-                      if (company?.website) {
-                        form.setFieldValue('website', company.website);
+                      if (id) {
+                        // Pre-fill website from company
+                        const company = companies.find((c) => c.id === id);
+                        if (company?.website) {
+                          form.setFieldValue('website', company.website);
+                        }
+                      } else {
+                        form.setFieldValue('website', '');
+                        form.setFieldValue('recruiterId', undefined);
                       }
                     }}
                     onCreateCompany={async (name) => {
@@ -237,6 +259,12 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
                         name,
                       });
                       return company;
+                    }}
+                    onUpdateCompany={async (id, name) => {
+                      await updateCompanyMutation.mutateAsync({ id, name });
+                    }}
+                    onDeleteCompany={async (id) => {
+                      await deleteCompanyMutation.mutateAsync(id);
                     }}
                   />
                   <FieldError errors={field.state.meta.errors} />
@@ -397,6 +425,26 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
               countries={countries}
               regions={regions}
               cities={cities}
+              onRenameItem={async (step, oldValue, newValue) => {
+                if (step === 'country') {
+                  await api.renameCountry(oldValue, newValue);
+                } else if (step === 'region') {
+                  await api.renameRegion(country, oldValue, newValue);
+                } else {
+                  await api.renameCity(country, oldValue, newValue, region || undefined);
+                }
+                queryClient.invalidateQueries({ queryKey: ['locations'] });
+              }}
+              onDeleteItem={async (step, value) => {
+                if (step === 'country') {
+                  await api.deleteCountry(value);
+                } else if (step === 'region') {
+                  await api.deleteRegion(country, value);
+                } else {
+                  await api.deleteCity(country, value, region || undefined);
+                }
+                queryClient.invalidateQueries({ queryKey: ['locations'] });
+              }}
             />
           </div>
 

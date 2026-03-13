@@ -56,6 +56,22 @@ export function ApplicationsTable({ applications, onEdit }: ApplicationsTablePro
       {
         accessorFn: (row) => row.company.name,
         header: 'Entreprise',
+        cell: ({ row }) => {
+          const { name, website } = row.original.company;
+          if (website) {
+            return (
+              <a
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-primary"
+              >
+                {name}
+              </a>
+            );
+          }
+          return name;
+        },
       },
       {
         accessorFn: (row) => {

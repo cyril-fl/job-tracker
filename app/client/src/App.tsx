@@ -22,7 +22,7 @@ function Dashboard() {
         <h1 className="text-2xl font-bold">Job Tracker</h1>
         <ThemeToggle />
       </div>
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6">
         <div className="shrink-0 min-w-75 w-full lg:w-100">
           <ApplicationForm
             key={editing?.id ?? 'new'}
