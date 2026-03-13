@@ -5,7 +5,6 @@ export const applicationStatusEnum = z.enum(['pending', 'in_progress', 'rejected
 
 export const createApplicationSchema = z.object({
   companyId: z.number().int().positive(),
-  position: z.string().min(1),
   url: z.string().url().optional(),
   appliedAt: z.string().optional(),
   status: applicationStatusEnum.optional(),

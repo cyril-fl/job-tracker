@@ -8,6 +8,13 @@
       "when": 1773345955899,
       "tag": "0000_peaceful_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1773347558244,
+      "tag": "0001_curious_firestar",
+      "breakpoints": true
     }
   ]
 }

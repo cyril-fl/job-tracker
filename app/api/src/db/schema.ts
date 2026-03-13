@@ -29,7 +29,6 @@ export const applications = sqliteTable('applications', {
     .notNull()
     .references(() => companies.id, { onDelete: 'cascade' }),
   addressId: integer('address_id').references(() => addresses.id, { onDelete: 'set null' }),
-  position: text('position').notNull(),
   url: text('url'),
   appliedAt: text('applied_at')
     .notNull()

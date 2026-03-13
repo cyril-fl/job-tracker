@@ -88,12 +88,10 @@ describe('Applications CRUD', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         companyId: company.id,
-        position: 'Developer',
       }),
     });
     expect(res.status).toBe(201);
     const body = await res.json();
-    expect(body.position).toBe('Developer');
     expect(body.status).toBe('pending');
     expect(body.company.name).toBe('Test Corp');
   });
@@ -105,7 +103,7 @@ describe('Applications CRUD', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         companyId: company.id,
-        position: 'Designer',
+
         address: { city: 'Arlon', region: 'Luxembourg', country: 'Belgique' },
       }),
     });
@@ -130,7 +128,7 @@ describe('Applications CRUD', () => {
     const create = await fetch(`${baseUrl}/api/applications`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ companyId: company.id, position: 'Dev' }),
+      body: JSON.stringify({ companyId: company.id }),
     });
     const { id } = await create.json();
 
@@ -149,7 +147,7 @@ describe('Applications CRUD', () => {
     const create = await fetch(`${baseUrl}/api/applications`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ companyId: company.id, position: 'Dev' }),
+      body: JSON.stringify({ companyId: company.id }),
     });
     const { id } = await create.json();
 
@@ -179,7 +177,6 @@ describe('Applications CRUD', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         companyId: company.id,
-        position: 'Dev',
         address: { city: 'Arlon' },
       }),
     });

@@ -1,33 +1,51 @@
+import { ApplicationForm } from '@/components/application-form';
+import { ApplicationsTable } from '@/components/applications-table';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { api } from '@/lib/api';
+import type { Application } from '@/lib/api';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import viteLogo from '/vite.svg';
-import reactLogo from './assets/react.svg';
-import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0);
+const queryClient = new QueryClient();
+
+function Dashboard() {
+  const [editing, setEditing] = useState<Application | null>(null);
+
+  const { data: applications = [], isLoading } = useQuery({
+    queryKey: ['applications'],
+    queryFn: api.getApplications,
+  });
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-background p-6">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Job Tracker</h1>
+        <ThemeToggle />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className="flex gap-6">
+        <div className="w-[400px] shrink-0">
+          <ApplicationForm
+            key={editing?.id ?? 'new'}
+            editing={editing}
+            onDone={() => setEditing(null)}
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          {isLoading ? (
+            <p className="text-muted-foreground">Chargement...</p>
+          ) : (
+            <ApplicationsTable applications={applications} onEdit={setEditing} />
+          )}
+        </div>
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Dashboard />
+    </QueryClientProvider>
+  );
+}
