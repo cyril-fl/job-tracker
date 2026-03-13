@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const statusConfig = {
+export const statusConfig = {
   draft: { label: 'Brouillon', variant: 'outline' as const, className: 'text-muted-foreground' },
   pending: { label: 'Attente', variant: 'outline' as const, className: '' },
   in_progress: { label: 'En cours', variant: 'default' as const, className: '' },

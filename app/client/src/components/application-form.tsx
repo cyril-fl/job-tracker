@@ -481,6 +481,9 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
           <div className="flex gap-2">
             {isEditingNonDraft ? (
               <>
+                <Button type="button" variant="outline" onClick={onDone}>
+                  Annuler
+                </Button>
                 <Button
                   type="button"
                   disabled={isPending}
@@ -492,12 +495,14 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
                 >
                   {isPending ? 'Envoi...' : 'Modifier'}
                 </Button>
-                <Button type="button" variant="outline" onClick={onDone}>
-                  Annuler
-                </Button>
               </>
             ) : (
               <>
+                {editing && (
+                  <Button type="button" variant="outline" onClick={onDone}>
+                    Annuler
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant="outline"
@@ -524,11 +529,6 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
                       ? 'Candidater'
                       : 'Ajouter'}
                 </Button>
-                {editing && (
-                  <Button type="button" variant="outline" onClick={onDone}>
-                    Annuler
-                  </Button>
-                )}
               </>
             )}
           </div>
