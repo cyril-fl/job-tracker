@@ -1,5 +1,5 @@
 import { createApplicationSchema, updateApplicationSchema } from '@Shared';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { Router } from 'express';
 import { db } from '../db';
 import { applications, locations } from '../db/schema';
@@ -40,7 +40,10 @@ async function upsertLocation(address: {
 router.get('/', async (_req, res) => {
   const result = await db.query.applications.findMany({
     with: { company: true, location: true, recruiter: true },
-    orderBy: (apps, { desc }) => [desc(apps.appliedAt)],
+    orderBy: (apps, { desc }) => [
+      desc(sql`CASE WHEN ${apps.status} = 'draft' THEN 1 ELSE 0 END`),
+      desc(apps.appliedAt),
+    ],
   });
   res.json(result);
 });

@@ -24,7 +24,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, RotateCcw } from 'lucide-react';
 import { useRef } from 'react';
 
 const applicationTypeLabels: Record<ApplicationType, string> = {
@@ -182,8 +182,20 @@ export function ApplicationForm({ editing, onDone }: ApplicationFormProps) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>{editing ? 'Modifier la candidature' : 'Nouvelle candidature'}</CardTitle>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            form.reset();
+            onDone();
+          }}
+          aria-label="Réinitialiser le formulaire"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </Button>
       </CardHeader>
       <CardContent>
         <form

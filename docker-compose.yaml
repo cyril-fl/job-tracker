@@ -12,7 +12,7 @@ services:
   nginx:
     image: ghcr.io/cyril-fl/job-tracker/nginx:latest
     ports:
-      - "80:80"
+      - "8881:80"
     depends_on:
       - api
     restart: unless-stopped
