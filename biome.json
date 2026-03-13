@@ -46,6 +46,16 @@
   },
   "overrides": [
     {
+      "include": ["app/client/src/components/ui/label.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off"
+          }
+        }
+      }
+    },
+    {
       "include": ["tsconfig*.json"],
       "json": {
         "parser": {

@@ -9,7 +9,11 @@ export default class Config {
   private readonly config: ConfigState;
 
   constructor(raw: Record<string, unknown> = {}) {
-    const data = JSONService.unflatten(raw);
+    const envOverrides: Record<string, unknown> = {};
+    if (process.env.PORT) envOverrides.port = Number(process.env.PORT);
+    if (process.env.CORS_ORIGIN) envOverrides.cors_origin = process.env.CORS_ORIGIN;
+
+    const data = JSONService.unflatten({ ...raw, ...envOverrides });
 
     const parsed = SchemaService.parse({ data, schema });
 

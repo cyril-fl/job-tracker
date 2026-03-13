@@ -58,8 +58,40 @@ export function ApplicationsTable({ applications, onEdit }: ApplicationsTablePro
         header: 'Entreprise',
       },
       {
-        accessorFn: (row) => row.address?.city ?? '—',
-        header: 'Ville',
+        accessorFn: (row) => {
+          const parts = [row.location?.city, row.location?.region, row.location?.country].filter(
+            Boolean,
+          );
+          return parts.length ? parts.join(', ') : '—';
+        },
+        header: 'Localisation',
+      },
+      {
+        accessorKey: 'applicationType',
+        header: 'Type',
+        cell: ({ row }) => {
+          const labels: Record<string, string> = {
+            spontaneous: 'Spontanée',
+            job_posting: 'Annonce',
+            recruitment: 'Recrutement',
+            other: 'Autre',
+          };
+          return row.original.applicationType ? (labels[row.original.applicationType] ?? '—') : '—';
+        },
+      },
+      {
+        accessorFn: (row) =>
+          row.recruiter ? `${row.recruiter.firstName} ${row.recruiter.lastName}` : '—',
+        header: 'Recruteur',
+      },
+      {
+        accessorKey: 'rating',
+        header: 'Review',
+        cell: ({ row }) => {
+          const rating = row.original.rating;
+          if (!rating) return '—';
+          return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        },
       },
       {
         accessorKey: 'status',
@@ -74,7 +106,10 @@ export function ApplicationsTable({ applications, onEdit }: ApplicationsTablePro
       {
         accessorKey: 'appliedAt',
         header: 'Date',
-        cell: ({ row }) => format(new Date(row.original.appliedAt), 'dd MMM yyyy', { locale: fr }),
+        cell: ({ row }) =>
+          row.original.appliedAt
+            ? format(new Date(row.original.appliedAt), 'dd MMM yyyy', { locale: fr })
+            : '—',
       },
       {
         id: 'actions',
@@ -120,7 +155,10 @@ export function ApplicationsTable({ applications, onEdit }: ApplicationsTablePro
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className={row.original.status === 'draft' ? 'opacity-50' : ''}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

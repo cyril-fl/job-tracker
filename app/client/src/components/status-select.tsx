@@ -8,10 +8,11 @@ import {
 } from '@/components/ui/select';
 
 const statusConfig = {
-  pending: { label: 'Attente', variant: 'outline' as const },
-  in_progress: { label: 'En cours', variant: 'default' as const },
-  rejected: { label: 'Refusé', variant: 'destructive' as const },
-  accepted: { label: 'Accepté', variant: 'secondary' as const },
+  draft: { label: 'Brouillon', variant: 'outline' as const, className: 'text-muted-foreground' },
+  pending: { label: 'Attente', variant: 'outline' as const, className: '' },
+  in_progress: { label: 'En cours', variant: 'default' as const, className: '' },
+  rejected: { label: 'Refusé', variant: 'destructive' as const, className: '' },
+  accepted: { label: 'Accepté', variant: 'secondary' as const, className: '' },
 } as const;
 
 type Status = keyof typeof statusConfig;
@@ -44,5 +45,9 @@ export function StatusSelect({ value, onChange }: StatusSelectProps) {
 
 export function StatusBadge({ status }: { status: Status }) {
   const config = statusConfig[status];
-  return <Badge variant={config.variant}>{config.label}</Badge>;
+  return (
+    <Badge variant={config.variant} className={config.className}>
+      {config.label}
+    </Badge>
+  );
 }

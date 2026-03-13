@@ -22,15 +22,15 @@ function Dashboard() {
         <h1 className="text-2xl font-bold">Job Tracker</h1>
         <ThemeToggle />
       </div>
-      <div className="flex gap-6">
-        <div className="w-[400px] shrink-0">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="shrink-0 min-w-75 w-full lg:w-100">
           <ApplicationForm
             key={editing?.id ?? 'new'}
             editing={editing}
             onDone={() => setEditing(null)}
           />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 grow">
           {isLoading ? (
             <p className="text-muted-foreground">Chargement...</p>
           ) : (

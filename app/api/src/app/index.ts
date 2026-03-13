@@ -9,6 +9,8 @@ import express from 'express';
 import { Config } from '@config';
 import applicationsRouter from '../routes/applications';
 import companiesRouter from '../routes/companies';
+import locationsRouter from '../routes/locations';
+import recruitersRouter from '../routes/recruiters';
 
 const configPath = path.join(process.cwd(), 'app.config.json');
 const raw = await fs
@@ -28,12 +30,14 @@ export class App {
     this.server.use(express.json());
     this.server.use('/api/companies', companiesRouter);
     this.server.use('/api/applications', applicationsRouter);
+    this.server.use('/api/locations', locationsRouter);
+    this.server.use('/api/recruiters', recruitersRouter);
   }
 
   public start(): Promise<void> {
     return new Promise((resolve) => {
       const { port } = this.config.parameters;
-      this.httpServer = this.server.listen(port, () => {
+      this.httpServer = this.server.listen(port, '0.0.0.0', () => {
         console.log(`Server running on port ${port}`);
         resolve();
       });

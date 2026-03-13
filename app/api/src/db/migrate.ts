@@ -4,7 +4,7 @@ import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 
-const dbPath = path.join(process.cwd(), 'job-tracker.db');
+const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'job-tracker.db');
 const migrationsFolder = path.join(path.dirname(fileURLToPath(import.meta.url)), 'migrations');
 
 const sqlite = new Database(dbPath);
